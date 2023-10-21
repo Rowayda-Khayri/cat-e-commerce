@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('cart', function (Blueprint $table) {
             $table->id();
-            $table->string('email')->unique();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->decimal('store_credit', 10, 2);
+            $table->boolean('is_completed')->default(false);
+            $table->unsignedBigInteger('user_id'); // Foreign key column
 
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users')
+            ->onDelete('cascade'); // Define the foreign key relationship
             $table->timestamps();
         });
     }
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('cart');
     }
 };
