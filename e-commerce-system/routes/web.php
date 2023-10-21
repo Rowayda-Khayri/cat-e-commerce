@@ -15,5 +15,7 @@ use App\Http\Controllers\CartController;
 |
 */
 
-Route::get('/', [StoreController::class, 'getAllStoreItems']);
+Route::get('/', [StoreController::class, 'getAllStoreItems'])->name('store');
+
+Route::post('/add-to-cart/{itemId}', [CartController::class, 'addToCart'])->name('addToCart');
 

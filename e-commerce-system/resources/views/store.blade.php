@@ -6,7 +6,7 @@
                 <h2>{{ $item->name }}</h2>
                 <p>{{ $item->description }}</p>
                 <p>Price: ${{ $item->price }}</p>
-                <form action="{{ route('addToCart', ['item' => $item->id]) }}" method="post">
+                <form action="{{ route('addToCart', ['itemId' => $item->id]) }}" method="post">
                     @csrf
                     <label for="quantity">Quantity:</label>
                     <input type="number" name="quantity" value="0" min="0">
