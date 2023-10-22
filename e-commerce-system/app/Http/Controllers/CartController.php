@@ -15,6 +15,13 @@ class CartController extends Controller
           // Retrieve the quantity from the form input
           $quantity = $request->input('quantity');
 
+          // Check if the item exists in the items table
+          $item = Item::find($itemId);
+
+          if (!$item) {
+              return response()->json(['error' => 'Item not found.'], 404);
+          }
+        
           // Check if current user has an active cart with
           $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
 
