@@ -17,4 +17,4 @@
     </div>
 
 {{-- Add a link to the "View Cart" page --}}
-<a href="{{ route('viewCart') }}">View Cart</a>
+<a href="{{ route('cart') }}">View Cart</a>

@@ -55,15 +55,30 @@ class CartController extends Controller
           // Find the active cart for the user
           $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
 
-          if ($cart) { // Active cart exists
-              
-              // Retrieve the items in the cart with their quantities
-              $cartItems = $cart->items()->withPivot('quantity')->get();
+          // Retrieve the items in the cart with their quantities
+          $cartItems = $cart->items()->withPivot('quantity')->get();
 
-              return view('cart', ['cartItems' => $cartItems]);
+          // Return JSON for API
+          if ($request->expectsJson()) {
+              return response()->json(['data' => $cartItems]);
           }
+        
+          return view('cart', ['cartItems' => $cartItems]);
+      }
 
-          
+      public function removeItemFromCart(Request $request, $itemId) {
+          $userId = 1; // Replace with the actual user ID 
+
+          // Find the active cart for the user
+          $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
+
+          // Remove the item from the cart (in the pivot table)
+          $cart->items()->detach($itemId);
+
+          // Handle the response based on the request type (web or API)
+          return $request->wantsJson()
+              ? response()->json(['message' => 'Item removed from the cart.'], 200)
+              : redirect()->route('cart')->with('success', 'Item removed from the cart.');
       }
         
     }

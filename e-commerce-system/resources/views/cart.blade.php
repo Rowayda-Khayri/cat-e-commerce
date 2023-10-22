@@ -8,6 +8,7 @@
                         <th>Item</th>
                         <th>Quantity</th>
                         <th>Total Item Price</th>
+                        <th>Action</th> {{-- New column for the Remove link --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -16,6 +17,9 @@
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->pivot->quantity }}</td>
                             <td>{{ $item->price * $item->pivot->quantity }}</td>
+                            <td>
+                                <a href="{{ route('removeItemFromCart', ['itemId' => $item->id]) }}" class="btn btn-danger">Remove</a>
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>
