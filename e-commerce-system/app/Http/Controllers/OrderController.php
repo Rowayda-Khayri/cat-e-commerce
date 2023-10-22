@@ -47,36 +47,41 @@ class OrderController extends Controller
         }
 
         // Check if the user's store credits are sufficient to cover the order total
-      $user = User::find($userId); 
+      $user = User::find($userId);
+      $userCredit = $user->store_credit;
 
-      if ($user->store_credit < $totalPrice) {
+      if ($userCredit < $totalPrice) {
           $transactionResult = 'failure';
           if ($request->wantsJson()) {
               // Return a JSON response indicating insufficient store credits for the order
               return response()->json(['message' => 'Insufficient store credits for the order.'], 400);
           }
+      } else { // User has enough credit
+             
+              // Deduct the total price from the user's store credits
+              $user->store_credit -= $totalPrice;
+              $user->save();
+
+
+              // Mark the cart as completed
+              $cart->update(['is_completed' => true]);
+
+              // Save the transaction information in the Order table
+              $order = new Order();
+              $order->cart_id = $cart->id;
+              $order->total = $totalPrice;
+              $order->address = $request->input('address');
+              $order->telephone = $request->input('telephone');
+              $order->save();
+
+            // Return a response based on the request type (web or API)
+            if ($request->wantsJson()) {
+                return response()->json(['message' => 'Checkout successful.', 'total_price' => $totalPrice], 200);
+            }
+             
       }
-
-        // Deduct the total price from the user's store credits
-        $user->store_credit -= $totalPrice;
-        $user->save();
-
-        // Mark the cart as completed
-        $cart->update(['is_completed' => true]);
-
-        // Save the transaction information in the Order table
-        $order = new Order();
-        $order->cart_id = $cart->id;
-        $order->total = $totalPrice;
-        $order->address = $request->input('address');
-        $order->telephone = $request->input('telephone');
-        $order->save();
-
-      // Return a response based on the request type (web or API)
-      if ($request->wantsJson()) {
-          return response()->json(['message' => 'Checkout successful.', 'total_price' => $totalPrice], 200);
-      } else {
-        return view('order-result', compact('transactionResult', 'totalPrice'));
-      }
+      // In all cases of user credit, return to order result page  
+      return view('order-result', compact('transactionResult', 'totalPrice', 'userCredit'));
+      
     }
 }

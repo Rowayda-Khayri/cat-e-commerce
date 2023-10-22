@@ -10,6 +10,7 @@
                 Payment Failed: Your credit isn't enough!
             </div>
             <p>Total Price: ${{ $totalPrice }}</p>
+            <p>Your Credit Now: ${{ $userCredit }}</p>
             <a href="{{ route('cart') }}" class="btn btn-primary">View Cart</a>
         @endif
 
