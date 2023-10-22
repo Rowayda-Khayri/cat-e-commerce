@@ -48,6 +48,23 @@ class CartController extends Controller
               return redirect()->route('store')->with('success', 'Item added to cart.');
           }
       }
+
+      public function viewCart(Request $request) {
+          $userId = 1; // Replace with the actual user ID
+
+          // Find the active cart for the user
+          $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
+
+          if ($cart) { // Active cart exists
+              
+              // Retrieve the items in the cart with their quantities
+              $cartItems = $cart->items()->withPivot('quantity')->get();
+
+              return view('cart', ['cartItems' => $cartItems]);
+          }
+
+          
+      }
         
     }
     

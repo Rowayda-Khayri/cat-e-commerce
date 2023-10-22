@@ -19,3 +19,5 @@ Route::get('/', [StoreController::class, 'getAllStoreItems'])->name('store');
 
 Route::post('/add-to-cart/{itemId}', [CartController::class, 'addToCart'])->name('addToCart');
 
+Route::get('/cart',  [CartController::class, 'viewCart'])->name('viewCart');
+
