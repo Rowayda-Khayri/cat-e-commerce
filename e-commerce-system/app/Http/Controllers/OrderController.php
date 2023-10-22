@@ -54,7 +54,7 @@ class OrderController extends Controller
           $transactionResult = 'failure';
           if ($request->wantsJson()) {
               // Return a JSON response indicating insufficient store credits for the order
-              return response()->json(['message' => 'Insufficient store credits for the order.'], 400);
+              return response()->json(['message' => 'Insufficient store credits for the order.', 'total_price' => $totalPrice, 'user_credit' => $userCredit], 400);
           }
       } else { // User has enough credit
              
