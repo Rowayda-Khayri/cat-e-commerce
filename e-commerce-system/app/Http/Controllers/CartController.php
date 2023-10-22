@@ -55,6 +55,18 @@ class CartController extends Controller
           // Find the active cart for the user
           $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
 
+        if (!$cart) {
+            $transactionResult = 'failure'; // Set the transaction result to 'failure'
+            $totalPrice = 0; // Initialize with a default value
+
+            // Return a response based on the request type (web or API)
+            if ($request->wantsJson()) {
+                return response()->json(['message' => 'No active cart found.'], 400);
+            } else {
+                return redirect()->route('store')->with('error', 'No active cart found.');
+            }
+        }
+        
           // Retrieve the items in the cart with their quantities
           $cartItems = $cart->items()->withPivot('quantity')->get();
 

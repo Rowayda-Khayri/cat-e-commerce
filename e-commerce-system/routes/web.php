@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,7 @@ Route::get('/cart',  [CartController::class, 'viewCart'])->name('cart');
 Route::get('/cart/remove/{itemId}', [CartController::class, 'removeItemFromCart'])
 ->name('removeItemFromCart');
 
+Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+
+Route::post('/checkout/process', [OrderController::class, 'processCheckout'])
+->name('checkout.process');
