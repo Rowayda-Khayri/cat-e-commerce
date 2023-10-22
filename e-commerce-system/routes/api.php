@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StoreController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('/', [StoreController::class, 'getAllStoreItems'])->name('api.store');
+
+Route::post('/add-to-cart/{itemId}', [CartController::class, 'addToCart'])->name('api.addToCart');
+
+Route::get('/cart', [CartController::class, 'viewCart'])->name('api.cart');
+
+Route::get('/cart/remove/{itemId}', [CartController::class, 'removeItemFromCart'])->name('api.removeItemFromCart');
+
+Route::post('/checkout/process', [OrderController::class, 'processCheckout'])->name('api.checkout.process');
