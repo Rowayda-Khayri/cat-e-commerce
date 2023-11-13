@@ -9,7 +9,6 @@ class StoreController extends Controller
     public function getAllStoreItems(Request $request)
     {
         // Get all items
-        
         $items = Item::all();
 
         // Return JSON for API
