@@ -47,7 +47,7 @@ class CartController extends Controller
         }
         
         // Determine the response type (web or API) and return the appropriate response
-        if ($request->wantsJson()) {
+        if ($request->expectsJson()) {
             // If it's an API request, return a JSON response
             return response()->json(['message' => 'Item added to cart.'], 200);
         } else {
@@ -67,7 +67,7 @@ class CartController extends Controller
           $totalPrice = 0; // Initialize with a default value
 
           // Return a response based on the request type (web or API)
-          if ($request->wantsJson()) {
+          if ($request->expectsJson()) {
               return response()->json(['message' => 'No active cart found.'], 400);
           } else {
               return redirect()->route('store')->with('error', 'No active cart found.');
@@ -95,7 +95,7 @@ class CartController extends Controller
         $cart->items()->detach($itemId);
 
         // Handle the response based on the request type (web or API)
-        return $request->wantsJson()
+        return $request->expectsJson()
             ? response()->json(['message' => 'Item removed from the cart.'], 200)
             : redirect()->route('cart')->with('success', 'Item removed from the cart.');
     }

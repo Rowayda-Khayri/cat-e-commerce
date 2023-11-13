@@ -27,7 +27,7 @@ class OrderController extends Controller
             $totalPrice = 0; // Initialize with a default value
   
             // Return a response based on the request type (web or API)
-            if ($request->wantsJson()) {
+            if ($request->expectsJson()) {
                 return response()->json(['transactionResult' => $transactionResult, 'totalPrice' => $totalPrice, 'message' => 'No active cart found.'], 400);
             } else {
                 return redirect()->route('cart')->with('error', 'No active cart found.');
@@ -52,7 +52,7 @@ class OrderController extends Controller
   
         if ($userCredit < $totalPrice) {
             $transactionResult = 'failure';
-            if ($request->wantsJson()) {
+            if ($request->expectsJson()) {
                 // Return a JSON response indicating insufficient store credits for the order
                 return response()->json(['message' => 'Insufficient store credits for the order.', 'total_price' => $totalPrice, 'user_credit' => $userCredit], 400);
             }
@@ -75,7 +75,7 @@ class OrderController extends Controller
                 $order->save();
   
               // Return a response based on the request type (web or API)
-              if ($request->wantsJson()) {
+              if ($request->expectsJson()) {
                   return response()->json(['message' => 'Checkout successful.', 'total_price' => $totalPrice], 200);
               }
                
