@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\CartService;
 use App\Models\Cart;
 use App\Models\Item;
 
 class CartController extends Controller
 {
 
-    public function addToCart(Request $request, $itemId) {
+    public function addToCart(Request $request, CartService $cartService, $itemId) {
         
         $userId = 1; // Replace with the actual user ID
         // Retrieve the quantity from the form input
@@ -22,8 +23,8 @@ class CartController extends Controller
             return response()->json(['error' => 'Item not found.'], 404);
         }
       
-        // Check if current user has an active cart with
-        $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
+        // Check if current user has an active cart
+        $cart = $cartService->getUserActiveCart($userId);
 
         if (!$cart) { // No active cart exists
             //Create a new cart record
@@ -56,11 +57,11 @@ class CartController extends Controller
         }
     }
 
-    public function viewCart(Request $request) {
+    public function viewCart(Request $request, CartService $cartService) {
         $userId = 1; // Replace with the actual user ID
 
         // Find the active cart for the user
-        $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
+        $cart = $cartService->getUserActiveCart($userId);
 
         if (!$cart) {
           $transactionResult = 'failure'; // Set the transaction result to 'failure'
@@ -85,11 +86,11 @@ class CartController extends Controller
         return view('cart', ['cartItems' => $cartItems]);
     }
 
-    public function removeItemFromCart(Request $request, $itemId) {
+    public function removeItemFromCart(Request $request, CartService $cartService, $itemId) {
         $userId = 1; // Replace with the actual user ID 
 
         // Find the active cart for the user
-        $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
+        $cart = $cartService->getUserActiveCart($userId);
 
         // Remove the item from the cart (in the pivot table)
         $cart->items()->detach($itemId);

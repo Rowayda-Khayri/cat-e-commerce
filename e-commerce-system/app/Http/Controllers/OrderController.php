@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Services\CartService;
 use App\Models\Cart;
 use App\Models\Item;
 use App\Models\Order;
@@ -14,11 +15,11 @@ class OrderController extends Controller
         return view('checkout');
     }
 
-    public function processCheckout(Request $request) {
+    public function processCheckout(Request $request, CartService $cartService) {
         $userId = 1; // Replace with the actual user ID 
 
         // Find the active cart for the user
-        $cart = Cart::where('user_id', $userId)->where('is_completed', false)->first();
+        $cart = $cartService->getUserActiveCart($userId);
 
         $transactionResult = 'success';
         
